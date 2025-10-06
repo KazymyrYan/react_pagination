@@ -11,14 +11,18 @@ export const App: React.FC = () => {
   const [perPage, setPerPage] = useState(5);
 
   const total = items.length;
-  const startIndex = (page - 1) * perPage;
+
+  const totalPages = Math.ceil(total / perPage) || 1;
+  const safePage = Math.min(Math.max(page, 1), totalPages);
+
+  const startIndex = total === 0 ? 0 : (safePage - 1) * perPage;
   const endIndex = startIndex + perPage;
   const visibleItems = items.slice(startIndex, endIndex);
 
   // Subtitle (Page and items)
-  const firstItem = startIndex + 1;
-  const lastItem = Math.min(endIndex, total);
-  const infoText = `Page ${page} (items ${firstItem} - ${lastItem} of ${total})`;
+  const firstItem = total === 0 ? 0 : startIndex + 1;
+  const lastItem = total === 0 ? 0 : Math.min(endIndex, total);
+  const infoText = `Page ${safePage} (items ${firstItem} - ${lastItem} of ${total})`;
 
   return (
     <div className="container">
